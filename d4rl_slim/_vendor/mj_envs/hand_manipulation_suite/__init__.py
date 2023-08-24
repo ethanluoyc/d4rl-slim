@@ -1,5 +1,4 @@
 from gym.envs.registration import register
-from mj_envs.mujoco_env import MujocoEnv
 
 # Swing the door open
 register(
@@ -79,7 +78,7 @@ register(
         reward_type="binary",
     ),
 )
-from mj_envs.hand_manipulation_suite.pen_v0 import PenEnvV0
+from d4rl_slim._vendor.mj_envs.hand_manipulation_suite.pen_v0 import PenEnvV0
 
 # Relcoate an object to the target
 register(
@@ -103,4 +102,4 @@ register(
         reward_type="binary",
     ),
 )
-from mj_envs.hand_manipulation_suite.relocate_v0 import RelocateEnvV0
+from d4rl_slim._vendor.mj_envs.hand_manipulation_suite.relocate_v0 import RelocateEnvV0

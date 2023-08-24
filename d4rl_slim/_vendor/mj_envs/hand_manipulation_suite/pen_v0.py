@@ -1,7 +1,7 @@
 import numpy as np
 from gym import utils
-from mj_envs import mujoco_env
-from mj_envs.utils.quatmath import quat2euler, euler2quat
+from d4rl_slim._vendor.mj_envs import mujoco_env
+from d4rl_slim._vendor.mj_envs.utils.quatmath import quat2euler, euler2quat
 from mujoco_py import MjViewer
 import os
 
@@ -85,7 +85,7 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         elif self.reward_type == "binary":
             reward = goal_achieved - 1
         else:
-            error
+            raise ValueError
 
         # penalty for dropping the pen
         done = False

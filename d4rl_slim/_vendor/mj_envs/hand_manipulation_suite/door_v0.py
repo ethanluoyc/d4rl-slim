@@ -1,6 +1,6 @@
 import numpy as np
 from gym import utils
-from mj_envs import mujoco_env
+from d4rl_slim._vendor.mj_envs import mujoco_env
 from mujoco_py import MjViewer
 import os
 
@@ -61,7 +61,7 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         elif self.reward_type == "binary":
             reward = goal_achieved - 1
         else:
-            error
+            raise ValueError
 
         return ob, reward, False, dict(goal_achieved=goal_achieved)
 

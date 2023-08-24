@@ -1,6 +1,6 @@
 import numpy as np
 from gym import utils
-from mj_envs import mujoco_env
+from d4rl_slim._vendor.mj_envs import mujoco_env
 from mujoco_py import MjViewer
 from mj_envs.utils.quatmath import *
 import os
@@ -71,7 +71,7 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         elif self.reward_type == "binary":
             reward = goal_achieved - 1
         else:
-            error
+            raise ValueError
 
         # take hammer head to nail # does not seem to be in the reward fn
         # reward -= np.linalg.norm((tool_pos - target_pos))
