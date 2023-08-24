@@ -294,14 +294,14 @@ class MazeEnv(gym.Env):
   def step(self, action):
     if self._manual_collision:
       old_pos = self.get_xy()
-      inner_next_obs, inner_reward, done, info = self.LOCOMOTION_ENV.step(self, action)
+      inner_next_obs, inner_reward, done, truncated, info = self.LOCOMOTION_ENV.step(self, action)
       new_pos = self.get_xy()
       if self._is_in_collision(new_pos):
         self.set_xy(old_pos)
     else:
-      inner_next_obs, inner_reward, done, info = self.LOCOMOTION_ENV.step(self, action)
+      inner_next_obs, inner_reward, done, truncated, info = self.LOCOMOTION_ENV.step(self, action)
     next_obs = self._get_obs()
-    return next_obs, inner_reward, done, info
+    return next_obs, inner_reward, done, truncated, info
 
   def _get_best_next_rowcol(self, current_rowcol, target_rowcol):
     """Runs BFS to find shortest path to target and returns best next rowcol. 

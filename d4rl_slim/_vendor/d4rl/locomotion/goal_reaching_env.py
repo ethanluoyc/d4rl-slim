@@ -47,7 +47,7 @@ class GoalReachingEnv(object):
       done = True
 
     obs = self._get_obs()
-    return obs, reward, done, {}
+    return obs, reward, done, False, {}
 
   def reset_model(self):
     if self.target_goal is not None or self.eval:

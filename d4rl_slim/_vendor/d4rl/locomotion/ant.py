@@ -21,12 +21,12 @@ import os
 
 from gymnasium import utils
 from gymnasium import spaces
+from gymnasium import wrappers
 from gymnasium.envs.mujoco import mujoco_env
 
 from d4rl_slim._vendor.d4rl.locomotion import goal_reaching_env
 from d4rl_slim._vendor.d4rl.locomotion import maze_env
 from d4rl_slim._vendor.d4rl import offline_env
-from d4rl_slim._vendor.d4rl.locomotion import wrappers
 
 GYM_ASSETS_DIR = os.path.join(
     os.path.dirname(goal_reaching_env.__file__),
@@ -82,7 +82,7 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         and state[2] >= 0.2 and state[2] <= 1.0
     done = not notdone
     ob = self._get_obs()
-    return ob, reward, done, dict(
+    return ob, reward, done, False, dict(
         reward_forward=forward_reward,
         reward_ctrl=-ctrl_cost,
         reward_contact=-contact_cost,
@@ -183,8 +183,8 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
     ## We set the target foal here for evaluation
     self.set_target()
     self.v2_resets = v2_resets
-          
-  def reset(self):
+
+  def reset(self, **kwargs):
     if self.v2_resets:
       """
       The target goal for evaluation in antmazes is randomized.
@@ -200,15 +200,21 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
       over 100-200 episodes will give a valid estimate of an algorithm's performance.
       """      
       self.set_target()
-    return super().reset()
-    
+    return super().reset(**kwargs)
+
   def set_target(self, target_location=None):
     return self.set_target_goal(target_location)
 
-  def seed(self, seed=0):
-      mujoco_env.MujocoEnv.seed(self, seed)
+def make_ant_maze_env(*, 
+                      maze_map, reward_type, non_zero_reset, eval, maze_size_scaling=4.0, v2_resets=False):
+  env = AntMazeEnv(
+    maze_map=maze_map,
+    reward_type=reward_type,
+    non_zero_reset=non_zero_reset,
+    eval=eval, 
+    maze_size_scaling=maze_size_scaling,
+    v2_resets=v2_resets)
+  env = wrappers.ClipAction(env)
+  env = wrappers.RescaleAction(env, -1.0, 1.0)
+  return env
 
-def make_ant_maze_env(**kwargs):
-  env = AntMazeEnv(**kwargs)
-  return wrappers.NormalizedBoxEnv(env)
-  
