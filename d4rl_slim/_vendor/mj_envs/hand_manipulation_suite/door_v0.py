@@ -1,12 +1,29 @@
 import numpy as np
-from gym import utils
-from d4rl_slim._vendor.mj_envs import mujoco_env
-from mujoco_py import MjViewer
+from gymnasium import utils
+from gymnasium import spaces
+from gymnasium.envs.mujoco import mujoco_env
 import os
+import mujoco
+from d4rl_slim._vendor.mj_envs.hand_manipulation_suite.mujoco_utils import actuator_name2id, joint_name2id, site_name2id, body_name2id
 
 ADD_BONUS_REWARDS = True
+ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DEFAULT_CAMERA_CONFIG = {
+    "distance": 1.5,
+    "azimuth": 90.0,
+}
 
 class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
+    metadata = {
+        "render_modes": [
+            "human",
+            "rgb_array",
+            "depth_array",
+        ],
+        "render_fps": 100,
+    }
+
     def __init__(self, reward_type="dense"):
         self.door_hinge_did = 0
         self.door_bid = 0
@@ -15,13 +32,20 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         self.reward_type = reward_type
 
         curr_dir = os.path.dirname(os.path.abspath(__file__))
-        mujoco_env.MujocoEnv.__init__(self, curr_dir+'/assets/DAPG_door.xml', 5)
+        mujoco_env.MujocoEnv.__init__(
+            self,
+            ASSETS_DIR + '/assets/DAPG_door.xml',
+            5,
+            observation_space=spaces.Box(low=-np.inf, high=np.inf, shape=(39,), dtype=np.float64),
+            default_camera_config=DEFAULT_CAMERA_CONFIG,
+        )
+        # self.action_space = spaces.Box(low=-1, high=1, shape=self.action_space.shape, dtype=self.action_space.dtype)
 
         # change actuator sensitivity
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([10, 0, 0])
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([1, 0, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([0, -10, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([0, -1, 0])
+        self.model.actuator_gainprm[actuator_name2id(self.model, 'A_WRJ1'):actuator_name2id(self.model, 'A_WRJ0')+1,:3] = np.array([10, 0, 0])
+        self.model.actuator_gainprm[actuator_name2id(self.model, 'A_FFJ3'):actuator_name2id(self.model, 'A_THJ0')+1,:3] = np.array([1, 0, 0])
+        self.model.actuator_biasprm[actuator_name2id(self.model, 'A_WRJ1'):actuator_name2id(self.model, 'A_WRJ0')+1,:3] = np.array([0, -10, 0])
+        self.model.actuator_biasprm[actuator_name2id(self.model, 'A_FFJ3'):actuator_name2id(self.model, 'A_THJ0')+1,:3] = np.array([0, -1, 0])
 
         utils.EzPickle.__init__(self)
         ob = self.reset_model()
@@ -29,10 +53,10 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         self.act_rng = 0.5*(self.model.actuator_ctrlrange[:,1]-self.model.actuator_ctrlrange[:,0])
         self.action_space.high = np.ones_like(self.model.actuator_ctrlrange[:,1])
         self.action_space.low  = -1.0 * np.ones_like(self.model.actuator_ctrlrange[:,0])
-        self.door_hinge_did = self.model.jnt_dofadr[self.model.joint_name2id('door_hinge')]
-        self.grasp_sid = self.model.site_name2id('S_grasp')
-        self.handle_sid = self.model.site_name2id('S_handle')
-        self.door_bid = self.model.body_name2id('frame')
+        self.door_hinge_did = self.model.jnt_dofadr[joint_name2id(self.model, 'door_hinge')]
+        self.grasp_sid = site_name2id(self.model, 'S_grasp')
+        self.handle_sid = site_name2id(self.model, 'S_handle')
+        self.door_bid = body_name2id(self.model, 'frame')
 
     def step(self, a):
         a = np.clip(a, -1.0, 1.0)
@@ -63,7 +87,7 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         else:
             raise ValueError
 
-        return ob, reward, False, dict(goal_achieved=goal_achieved)
+        return ob, reward, False, False, dict(goal_achieved=goal_achieved)
 
     def get_obs(self):
         # qpos for hand
@@ -90,7 +114,7 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         self.model.body_pos[self.door_bid,0] = self.np_random.uniform(low=-0.3, high=-0.2)
         self.model.body_pos[self.door_bid,1] = self.np_random.uniform(low=0.25, high=0.35)
         self.model.body_pos[self.door_bid,2] = self.np_random.uniform(low=0.252, high=0.35)
-        self.sim.forward()
+        mujoco.mj_forward(self.model, self.data)
         return self.get_obs()
 
     def get_env_state(self):
@@ -110,20 +134,4 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         qv = state_dict['qvel']
         self.set_state(qp, qv)
         self.model.body_pos[self.door_bid] = state_dict['door_body_pos']
-        self.sim.forward()
-
-    def mj_viewer_setup(self):
-        self.viewer = MjViewer(self.sim)
-        self.viewer.cam.azimuth = 90
-        self.sim.forward()
-        self.viewer.cam.distance = 1.5
-
-    def evaluate_success(self, paths):
-        num_success = 0
-        num_paths = len(paths)
-        # success if door open for 25 steps
-        for path in paths:
-            if np.sum(path['env_infos']['goal_achieved']) > 25:
-                num_success += 1
-        success_percentage = num_success*100.0/num_paths
-        return success_percentage
+        mujoco.mj_forward(self.model, self.data)

@@ -1,10 +1,16 @@
-from gym.envs.registration import register
+from gymnasium.envs.registration import register as _register
+
+def register(*, id, entry_point, max_episode_steps, kwargs):
+    _register(f"d4rl_slim/{id}", entry_point=entry_point,
+        max_episode_steps=max_episode_steps,
+        kwargs=kwargs)
 
 # Swing the door open
 register(
     id='door-v0',
     entry_point='d4rl_slim._vendor.mj_envs.hand_manipulation_suite:DoorEnvV0',
     max_episode_steps=200,
+    kwargs=dict(),
 )
 register(
     id='door-sparse-v0',
@@ -29,6 +35,7 @@ register(
     id='hammer-v0',
     entry_point='d4rl_slim._vendor.mj_envs.hand_manipulation_suite:HammerEnvV0',
     max_episode_steps=200,
+    kwargs={}
 )
 register(
     id='hammer-sparse-v0',
@@ -61,6 +68,7 @@ register(
     id='pen-notermination-v0',
     entry_point='d4rl_slim._vendor.mj_envs.hand_manipulation_suite:PenEnvV0',
     max_episode_steps=100,
+    kwargs=dict(),
 )
 register(
     id='pen-sparse-v0',
@@ -85,6 +93,7 @@ register(
     id='relocate-v0',
     entry_point='d4rl_slim._vendor.mj_envs.hand_manipulation_suite:RelocateEnvV0',
     max_episode_steps=200,
+    kwargs=dict()
 )
 register(
     id='relocate-sparse-v0',
