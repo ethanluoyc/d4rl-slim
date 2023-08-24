@@ -32,11 +32,6 @@ Source = "https://github.com/unknown/d4rl-slim"
 
 [tool.hatch.build]
 directory = "dist"
-include = [
-  "d4rl_slim/envs/adroit_binary/assets",
-  "d4rl_slim/d4rl_infos.json",
-  "d4rl_slim/envs/antmaze/assets",
-]
 
 [tool.hatch.version]
 path = "d4rl_slim/__about__.py"
