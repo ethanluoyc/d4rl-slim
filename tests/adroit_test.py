@@ -9,6 +9,7 @@ class AdroitTest(unittest.TestCase):
         env = gymnasium.make('d4rl_slim/door-v0').unwrapped
         env_checker.check_env(env, skip_render_check=True)
         state = env.get_env_state()
+        print(env.action_space)
         env.set_env_state(state)
 
     def test_hammer_v1(self):

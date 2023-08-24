@@ -51,8 +51,10 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
         ob = self.reset_model()
         self.act_mid = np.mean(self.model.actuator_ctrlrange, axis=1)
         self.act_rng = 0.5*(self.model.actuator_ctrlrange[:,1]-self.model.actuator_ctrlrange[:,0])
-        self.action_space.high = np.ones_like(self.model.actuator_ctrlrange[:,1])
-        self.action_space.low  = -1.0 * np.ones_like(self.model.actuator_ctrlrange[:,0])
+        self.action_space = spaces.Box(
+            low=-1.0 * np.ones_like(self.model.actuator_ctrlrange[:,0]),
+            high=np.ones_like(self.model.actuator_ctrlrange[:,1]), dtype=np.float32
+        )
         self.door_hinge_did = self.model.jnt_dofadr[joint_name2id(self.model, 'door_hinge')]
         self.grasp_sid = site_name2id(self.model, 'S_grasp')
         self.handle_sid = site_name2id(self.model, 'S_handle')
