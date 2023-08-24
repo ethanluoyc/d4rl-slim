@@ -20,7 +20,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 import math
 import numpy as np
-import gym
+import gymnasium as gym
 from copy import deepcopy
 
 RESET = R = 'r'  # Reset position.

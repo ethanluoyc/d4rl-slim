@@ -2,8 +2,8 @@ import os
 import urllib.request
 import warnings
 
-import gym
-from gym.utils import colorize
+import gymnasium as gym
+from gymnasium.utils import colorize
 import h5py
 from tqdm import tqdm
 
