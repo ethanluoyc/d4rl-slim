@@ -1,12 +1,12 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "d4rl-slim"
-description = ''
+description = 'A small package for working with D4RL datasets without D4RL dependency.'
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [{ name = "Yicheng Luo", email = "ethanluoyc@gmail.com" }]
@@ -14,40 +14,36 @@ dynamic = ["version"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: Implementation :: CPython",
 ]
-dependencies = ["gymnasium", "tqdm", "h5py"]
+dependencies = ["gymnasium"]
+
 [project.optional-dependencies]
-mujoco = ["gymnasium[mujoco]"]
+mujoco = ["gymnasium[mujoco]", "mujoco", "numpy"]
+dataset = ["h5py", "tqdm"]
+all = ["gymnasium[mujoco]", "mujoco", "numpy", "h5py", "tqdm"]
 
 [project.urls]
 Documentation = "https://github.com/unknown/d4rl-slim#readme"
 Issues = "https://github.com/unknown/d4rl-slim/issues"
 Source = "https://github.com/unknown/d4rl-slim"
 
+[project.entry-points."gymnasium.envs"]
+__root__ = "d4rl_slim.__init__:register_d4rl_slim_envs"
+
 [tool.hatch.build]
 directory = "dist"
-include = [
-  "d4rl_slim/envs/adroit_binary/assets",
-  "d4rl_slim/d4rl_infos.json",
-  "d4rl_slim/envs/antmaze/assets",
-]
 
 [tool.hatch.version]
-path = "d4rl_slim/__about__.py"
+source = "vcs"
 
 [tool.hatch.envs.default]
-features = ["mujoco"]
-dependencies = [
-  "pytest",
-  "Cython<3",
-  "d4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl",
-]
+features = ["all"]
+dependencies = ["pytest"]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 
@@ -63,10 +59,29 @@ fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
 all = ["style", "typing"]
 
 [tool.black]
-target-version = ["py37"]
-line-length = 120
-skip-string-normalization = true
+line-length = 88
+target-version = ['py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | docs
+  | .github
+  | d4rl_slim/third_party
+  | .venv
+  | scratch
+)/
+'''
 
+[tool.ruff]
+line-length = 120
+select = [
+  "E", # pycodestyle
+  "F", # pyflakes
+  "I",
+]
+exclude = ["d4rl_slim/third_party"]
 unfixable = [
   # Don't touch unused imports
   "F401",
@@ -76,6 +91,24 @@ unfixable = [
 "__init__.py" = ["F401"]
 
 [tool.ruff.isort]
-known-first-party = ["orax"]
+known-first-party = ["rocket", "orax"]
 force-single-line = true
 single-line-exclusions = ["typing"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+
+[tool.pyright]
+include = ["d4rl_slim"]
+exclude = ["d4rl_slim/third_party", "**/__pycache__"]
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.9"
+pythonPlatform = "Linux"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]

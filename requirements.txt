@@ -1,6 +1,0 @@
-mujoco_py
-six
-gymnasium
-cython<3
-d4rl @ git+https://github.com/Farama-Foundation/D4RL.git
-
