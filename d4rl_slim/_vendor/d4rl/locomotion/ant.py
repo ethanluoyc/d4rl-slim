@@ -26,7 +26,6 @@ from gymnasium.envs.mujoco import mujoco_env
 
 from d4rl_slim._vendor.d4rl.locomotion import goal_reaching_env
 from d4rl_slim._vendor.d4rl.locomotion import maze_env
-from d4rl_slim._vendor.d4rl import offline_env
 
 GYM_ASSETS_DIR = os.path.join(
     os.path.dirname(goal_reaching_env.__file__),
@@ -163,7 +162,7 @@ class GoalReachingAntEnv(goal_reaching_env.GoalReachingEnv, AntEnv):
                     expose_body_comvels=None,
                     non_zero_reset=non_zero_reset)
 
-class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
+class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv):
   """Ant navigating a maze."""
   LOCOMOTION_ENV = GoalReachingAntEnv
 
@@ -178,7 +177,6 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
         expose_all_qpos=expose_all_qpos,
         reward_type=reward_type,
         **kwargs)
-    offline_env.OfflineEnv.__init__(self, **kwargs)
 
     ## We set the target foal here for evaluation
     self.set_target()
