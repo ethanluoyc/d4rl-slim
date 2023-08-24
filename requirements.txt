@@ -1,6 +1,3 @@
-mujoco_py
-six
+mujoco_py @ git+https://github.com/ethanluoyc/mujoco-py@v2.1.2.14-patch
 gymnasium
-cython<3
 d4rl @ git+https://github.com/Farama-Foundation/D4RL.git
-
