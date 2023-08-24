@@ -2,7 +2,7 @@ import numpy as np
 from gym import utils
 from d4rl_slim._vendor.mj_envs import mujoco_env
 from mujoco_py import MjViewer
-from mj_envs.utils.quatmath import *
+from d4rl_slim._vendor.mj_envs.utils.quatmath import *
 import os
 
 ADD_BONUS_REWARDS = True
