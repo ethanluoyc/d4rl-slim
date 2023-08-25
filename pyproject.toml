@@ -28,9 +28,9 @@ dataset = ["h5py", "tqdm"]
 all = ["gymnasium[mujoco]", "mujoco", "numpy", "h5py", "tqdm"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/d4rl-slim#readme"
-Issues = "https://github.com/unknown/d4rl-slim/issues"
-Source = "https://github.com/unknown/d4rl-slim"
+Documentation = "https://github.com/ethanluoyc/d4rl-slim#readme"
+Issues = "https://github.com/ethanluoyc/d4rl-slim/issues"
+Source = "https://github.com/ethanluoyc/d4rl-slim"
 
 [project.entry-points."gymnasium.envs"]
 __root__ = "d4rl_slim.__init__:register_d4rl_slim_envs"
