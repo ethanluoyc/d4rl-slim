@@ -88,6 +88,36 @@ class RelocateEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
 
         return ob, reward, False, False, dict(goal_achieved=goal_achieved)
 
+    # D4RL
+    # def step(self, a):
+    #     ADD_BONUS_REWARDS = True
+    #     a = np.clip(a, -1.0, 1.0)
+    #     try:
+    #         a = self.act_mid + a*self.act_rng # mean center and scale
+    #     except:
+    #         a = a                             # only for the initialization phase
+    #     self.do_simulation(a, self.frame_skip)
+    #     ob = self.get_obs()
+    #     obj_pos  = self.data.body_xpos[self.obj_bid].ravel()
+    #     palm_pos = self.data.site_xpos[self.S_grasp_sid].ravel()
+    #     target_pos = self.data.site_xpos[self.target_obj_sid].ravel()
+
+    #     reward = -0.1*np.linalg.norm(palm_pos-obj_pos)              # take hand to object
+    #     if obj_pos[2] > 0.04:                                       # if object off the table
+    #         reward += 1.0                                           # bonus for lifting the object
+    #         reward += -0.5*np.linalg.norm(palm_pos-target_pos)      # make hand go to target
+    #         reward += -0.5*np.linalg.norm(obj_pos-target_pos)       # make object go to target
+
+    #     if ADD_BONUS_REWARDS:
+    #         if np.linalg.norm(obj_pos-target_pos) < 0.1:
+    #             reward += 10.0                                          # bonus for object close to target
+    #         if np.linalg.norm(obj_pos-target_pos) < 0.05:
+    #             reward += 20.0                                          # bonus for object "very" close to target
+
+    #     goal_achieved = True if np.linalg.norm(obj_pos-target_pos) < 0.1 else False
+
+    #     return ob, reward, False, dict(goal_achieved=goal_achieved)
+
     def _get_obs(self):
         # qpos for hand
         # xpos for obj

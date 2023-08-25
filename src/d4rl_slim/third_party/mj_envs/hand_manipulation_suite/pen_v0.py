@@ -121,6 +121,47 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
 
         return self._get_obs(), reward, done, False, dict(goal_achieved=goal_achieved)
 
+    # D4RL
+    # def step(self, a):
+    #     ADD_BONUS_REWARDS = True
+    #     a = np.clip(a, -1.0, 1.0)
+    #     try:
+    #         starting_up = False
+    #         a = self.act_mid + a*self.act_rng # mean center and scale
+    #     except:
+    #         starting_up = True
+    #         a = a                             # only for the initialization phase
+    #     self.do_simulation(a, self.frame_skip)
+
+    #     obj_pos  = self.data.body_xpos[self.obj_bid].ravel()
+    #     desired_loc = self.data.site_xpos[self.eps_ball_sid].ravel()
+    #     obj_orien = (self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid])/self.pen_length
+    #     desired_orien = (self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid])/self.tar_length
+
+    #     # pos cost
+    #     dist = np.linalg.norm(obj_pos-desired_loc)
+    #     reward = -dist
+    #     # orien cost
+    #     orien_similarity = np.dot(obj_orien, desired_orien)
+    #     reward += orien_similarity
+
+    #     if ADD_BONUS_REWARDS:
+    #         # bonus for being close to desired orientation
+    #         if dist < 0.075 and orien_similarity > 0.9:
+    #             reward += 10
+    #         if dist < 0.075 and orien_similarity > 0.95:
+    #             reward += 50
+
+    #     # penalty for dropping the pen
+    #     done = False
+    #     if obj_pos[2] < 0.075:
+    #         reward -= 5
+    #         done = True if not starting_up else False
+
+    #     goal_achieved = True if (dist < 0.075 and orien_similarity > 0.95) else False
+
+    #     return self.get_obs(), reward, done, dict(goal_achieved=goal_achieved)
+
     def _get_obs(self):
         qp = self.data.qpos.ravel()
         obj_vel = self.data.qvel[-6:].ravel()

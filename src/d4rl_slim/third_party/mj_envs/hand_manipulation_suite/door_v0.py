@@ -89,6 +89,39 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle):
 
         return ob, reward, False, False, dict(goal_achieved=goal_achieved)
 
+    # D4RL
+    # def step(self, a):
+    #     ADD_BONUS_REWARDS = True
+    #     a = np.clip(a, -1.0, 1.0)
+    #     try:
+    #         a = self.act_mid + a*self.act_rng # mean center and scale
+    #     except:
+    #         a = a                             # only for the initialization phase
+    #     self.do_simulation(a, self.frame_skip)
+    #     ob = self.get_obs()
+    #     handle_pos = self.data.site_xpos[self.handle_sid].ravel()
+    #     palm_pos = self.data.site_xpos[self.grasp_sid].ravel()
+    #     door_pos = self.data.qpos[self.door_hinge_did]
+
+    #     # get to handle
+    #     reward = -0.1*np.linalg.norm(palm_pos-handle_pos)
+    #     # open door
+    #     reward += -0.1*(door_pos - 1.57)*(door_pos - 1.57)
+    #     # velocity cost
+    #     reward += -1e-5*np.sum(self.data.qvel**2)
+
+    #     if ADD_BONUS_REWARDS:
+    #         # Bonus
+    #         if door_pos > 0.2:
+    #             reward += 2
+    #         if door_pos > 1.0:
+    #             reward += 8
+    #         if door_pos > 1.35:
+    #             reward += 10
+    #     goal_achieved = True if door_pos >= 1.35 else False
+
+    #     return ob, reward, False, dict(goal_achieved=goal_achieved)
+
     def _get_obs(self):
         # qpos for hand
         # xpos for obj
