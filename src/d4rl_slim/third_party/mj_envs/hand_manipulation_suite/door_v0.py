@@ -6,7 +6,6 @@ import os
 import mujoco
 from .mujoco_utils import actuator_name2id, joint_name2id, site_name2id, body_name2id
 
-ADD_BONUS_REWARDS = True
 ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEFAULT_CAMERA_CONFIG = {

@@ -345,7 +345,9 @@ def register_d4rl_slim_envs():
         id="door-v0",
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:DoorEnvV0",
         max_episode_steps=200,
-        kwargs=dict(),
+        kwargs=dict(
+            reward_type="dense",
+        ),
     )
     register(
         id="door-sparse-v0",
@@ -369,7 +371,9 @@ def register_d4rl_slim_envs():
         id="hammer-v0",
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:HammerEnvV0",
         max_episode_steps=200,
-        kwargs={},
+        kwargs=dict(
+            reward_type='dense',
+        ),
     )
     register(
         id="hammer-sparse-v0",
@@ -395,19 +399,24 @@ def register_d4rl_slim_envs():
         max_episode_steps=100,
         kwargs=dict(
             early_termination=True,
+            reward_type="dense",
         ),
     )
     register(
         id="pen-notermination-v0",
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:PenEnvV0",
         max_episode_steps=100,
-        kwargs=dict(),
+        kwargs=dict(
+            early_termination=False,
+            reward_type="dense",
+        ),
     )
     register(
         id="pen-sparse-v0",
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:PenEnvV0",
         max_episode_steps=100,
         kwargs=dict(
+            early_termination=False,
             reward_type="sparse",
         ),
     )
@@ -416,6 +425,7 @@ def register_d4rl_slim_envs():
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:PenEnvV0",
         max_episode_steps=100,
         kwargs=dict(
+            early_termination=False,
             reward_type="binary",
         ),
     )
@@ -425,7 +435,9 @@ def register_d4rl_slim_envs():
         id="relocate-v0",
         entry_point="d4rl_slim.third_party.mj_envs.hand_manipulation_suite:RelocateEnvV0",
         max_episode_steps=200,
-        kwargs=dict(),
+        kwargs=dict(
+            reward_type="dense",
+        ),
     )
     register(
         id="relocate-sparse-v0",
