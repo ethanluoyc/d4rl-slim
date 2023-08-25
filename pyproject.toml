@@ -70,6 +70,7 @@ exclude = '''
   | docs
   | .github
   | d4rl_slim/third_party
+  | third_party
   | .venv
   | scratch
 )/
@@ -82,7 +83,7 @@ select = [
   "F", # pyflakes
   "I",
 ]
-exclude = ["src/d4rl_slim/third_party"]
+exclude = ["src/d4rl_slim/third_party", "third_party"]
 unfixable = [
   # Don't touch unused imports
   "F401",
