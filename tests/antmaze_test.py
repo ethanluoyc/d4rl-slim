@@ -1,6 +1,5 @@
 import gymnasium
 from gymnasium.utils import env_checker
-import d4rl_slim._vendor.d4rl.locomotion # noqa
 import unittest
 import numpy as np
 

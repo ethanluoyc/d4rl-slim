@@ -1,6 +1,4 @@
-import d4rl_slim._vendor.mj_envs
 import unittest
-import numpy as np
 import gymnasium
 from gymnasium.utils import env_checker
 
