@@ -454,5 +454,5 @@ __all__ = [
     "list_datasets",
     "get_tfds_name",
     "get_environment",
-    "__version__"
+    "__version__",
 ]

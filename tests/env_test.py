@@ -1,6 +1,7 @@
+import os
+
 import gymnasium
 import numpy as np
-import os
 import pytest
 from gymnasium.utils import env_checker
 

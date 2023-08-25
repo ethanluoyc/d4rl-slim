@@ -37,6 +37,7 @@ __root__ = "d4rl_slim.__init__:register_d4rl_slim_envs"
 
 [tool.hatch.build]
 directory = "dist"
+packages = ["src/d4rl_slim"]
 
 [tool.hatch.version]
 source = "vcs"
@@ -81,7 +82,7 @@ select = [
   "F", # pyflakes
   "I",
 ]
-exclude = ["d4rl_slim/third_party"]
+exclude = ["src/d4rl_slim/third_party"]
 unfixable = [
   # Don't touch unused imports
   "F401",
@@ -91,7 +92,7 @@ unfixable = [
 "__init__.py" = ["F401"]
 
 [tool.ruff.isort]
-known-first-party = ["rocket", "orax"]
+known-first-party = ["d4rl_slim"]
 force-single-line = true
 single-line-exclusions = ["typing"]
 
@@ -100,8 +101,8 @@ ban-relative-imports = "all"
 
 
 [tool.pyright]
-include = ["d4rl_slim"]
-exclude = ["d4rl_slim/third_party", "**/__pycache__"]
+include = ["src/"]
+exclude = ["src/d4rl_slim/third_party", "**/__pycache__"]
 
 reportMissingImports = true
 reportMissingTypeStubs = false
