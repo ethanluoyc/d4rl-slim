@@ -77,3 +77,5 @@ def get_dataset(dataset_name: str):
     # Run a few quick sanity checks
     for key in ["observations", "actions", "rewards", "terminals"]:
         assert key in data_dict, "Dataset is missing key %s" % key
+
+    return data_dict
